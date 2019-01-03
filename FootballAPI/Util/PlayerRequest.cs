@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
+using FootballAPI.Models;
 using Newtonsoft.Json.Linq;
 
 namespace FootballAPI.Util
 {
     class PlayerRequest:Request
     {
-        public PlayerRequest(string season, bool regularSeason) : base(season, regularSeason)
-        { }
-        public PlayerRequest(bool regularSeason) : base(regularSeason)
+        public PlayerRequest(Season season) : base(season)
         { }
         /// <summary>
         /// Gets all active player information for a specified position
@@ -18,7 +17,7 @@ namespace FootballAPI.Util
         {
             string PlayersByPosition = "/roster_players.json?rosterstatus=assigned-to-roster&position=" + position;
             List<string[]> players = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(PlayersByPosition).Result)["rosterplayers"]["playerentry"];
+            JArray allPlayers = (JArray)JObject.Parse(Submit(PlayersByPosition))["rosterplayers"]["playerentry"];
             string[] playerInfo;
             foreach (JToken player in allPlayers)
             {
@@ -44,7 +43,7 @@ namespace FootballAPI.Util
         {
             string GameStats = "/player_gamelogs.json?team=" + team + "&position=" + position;
             List<string[]> stats = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(GameStats).Result)["rosterplayers"]["playerentry"];
+            JArray allPlayers = (JArray)JObject.Parse(Submit(GameStats))["rosterplayers"]["playerentry"];
             string[] playerStats;
             foreach (JToken player in allPlayers)
             {
@@ -62,7 +61,7 @@ namespace FootballAPI.Util
         {
             string SeasonStats = "/cumulative_player_stats.json?position=" + position;
             List<string[]> stats = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(SeasonStats).Result)["rosterplayers"]["playerentry"];
+            JArray allPlayers = (JArray)JObject.Parse(Submit(SeasonStats))["rosterplayers"]["playerentry"];
             string[] playerStats;
             foreach (JToken player in allPlayers)
             {

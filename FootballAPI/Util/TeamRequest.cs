@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
+using FootballAPI.Models;
 using Newtonsoft.Json.Linq;
 
 namespace FootballAPI.Util
 {
     class TeamRequest: Request 
     {
-        public TeamRequest(string season, bool regularSeason) : base(season, regularSeason)
-        { }
-        public TeamRequest(bool regularSeason) : base(regularSeason)
+        public TeamRequest(Season season) : base(season)
         { }
         /// <summary>
         /// Gets all 32 NFL Team names and their abbreviations
@@ -17,7 +16,7 @@ namespace FootballAPI.Util
         {
             string OverallTeams = "/overall_team_standings.json";
             List<string[]> teams = new List<string[]>();
-            JArray allTeams = (JArray)JObject.Parse(Submit(OverallTeams).Result)["overallteamstandings"]["teamstandingsentry"];
+            JArray allTeams = (JArray)JObject.Parse(Submit(OverallTeams))["overallteamstandings"]["teamstandingsentry"];
             string[] teamInfo = null;
             foreach (JToken team in allTeams)
             {
@@ -37,7 +36,7 @@ namespace FootballAPI.Util
         {
             string TeamGames = "/team_gamelogs.json?team=" + team;
             List<string[]> games = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(TeamGames).Result)["rosterplayers"]["playerentry"];
+            JArray allPlayers = (JArray)JObject.Parse(Submit(TeamGames))["rosterplayers"]["playerentry"];
             string[] playerStats;
             foreach (JToken player in allPlayers)
             {

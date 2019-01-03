@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace FootballAPI.Util
 {
@@ -18,13 +20,9 @@ namespace FootballAPI.Util
         private static MySqlConnection conn = null;
         //Transaction object
         private static MySqlTransaction trans = null;
-        public Database(string file)
-        {
-            connString = LoadConnString(file);
-        }
         public Database()
         {
-            this.connString = LoadConnString("connString.txt");
+            this.connString = LoadConnString();
 
         }
         /// <summary>
@@ -176,15 +174,16 @@ namespace FootballAPI.Util
         /// Reads Connection String from .txt file and returns it as a string
         /// </summary>
         /// <param name="file">The Location path of the .txt file</param>
-        public string LoadConnString(string file)
+        public string LoadConnString()
         {
-            string conn = null;
+            string cString = null;
+            string path = HttpRuntime.AppDomainAppPath + @"Resources\connString.txt";
             try
             {             
-                var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
+                var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
                 using (var streamReader = new StreamReader(fileStream))
                 {
-                    conn = streamReader.ReadToEnd();
+                    cString = streamReader.ReadToEnd();
                 }
             }
             catch (Exception e)
@@ -192,7 +191,7 @@ namespace FootballAPI.Util
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
             }
-            return conn;
+            return cString;
         }
 
     }

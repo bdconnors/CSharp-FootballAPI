@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FootballAPI.Models;
 using Newtonsoft.Json.Linq;
 
 namespace FootballAPI.Util
@@ -6,9 +7,7 @@ namespace FootballAPI.Util
     class DefenseRequest : Request
     {
 
-        public DefenseRequest(string season, bool regularSeason) : base(season,regularSeason)
-        {}
-        public DefenseRequest(bool regularSeason) : base(regularSeason)
+        public DefenseRequest(Season season) : base(season)
         {}
         /// <summary>
         /// Gets defensive game statistics of a specified NFL team
@@ -19,7 +18,7 @@ namespace FootballAPI.Util
         {
             string DefGames = "/team_gamelogs.json?team=" + team;
             List<string[]> stats = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(DefGames).Result)["rosterplayers"]["playerentry"];
+            JArray allPlayers = (JArray)JObject.Parse(Submit(DefGames))["rosterplayers"]["playerentry"];
             string[] playerStats;
             foreach (JToken player in allPlayers)
             {
@@ -36,7 +35,7 @@ namespace FootballAPI.Util
         {
             string DefSeason = "/overall_team_standings.json";
             List<string[]> stats = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(DefSeason).Result)["rosterplayers"]["playerentry"];
+            JArray allPlayers = (JArray)JObject.Parse(Submit(DefSeason))["rosterplayers"]["playerentry"];
             string[] playerStats;
             foreach (JToken player in allPlayers)
             {
