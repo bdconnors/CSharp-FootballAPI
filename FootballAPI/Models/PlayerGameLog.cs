@@ -11,6 +11,16 @@ namespace FootballAPI.Models
         public Team team { get; set; }
         public Game game { get; set; }
         public PlayerGameStats stats { get; set; }
+        
+        public PlayerGameLog(Player player,Game game)
+        {
+            this.player = player;
+            this.game = game;
+        }
+        public PlayerGameLog()
+        {
+
+        }
 
     }
 }

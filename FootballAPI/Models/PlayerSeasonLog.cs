@@ -11,15 +11,14 @@ namespace FootballAPI.Models
         public Team team { get; set; }
         public PlayerSeasonStats stats {get; set;}
 
-        public PlayerSeasonLog(string playerid)
+        public PlayerSeasonLog(Player player)
         {
-            player = new Player(playerid);
+            this.player = player;
 
         }
-        public PlayerSeasonLog(string fname,string lname)
+        public PlayerSeasonLog()
         {
-            player.fname = fname;
-            player.lname = lname;
+
         }
     }
 }

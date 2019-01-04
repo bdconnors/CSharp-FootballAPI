@@ -22,7 +22,14 @@ namespace FootballAPI.Services
         }
         public void Fetch()
         {
-                    
+            PlayerAccess playerAccess = new PlayerAccess(obj.player);
+            playerAccess.Fetch();
+            GameAccess gameAccess = new GameAccess(obj.game);
+            gameAccess.Fetch();
+            TeamAccess teamAccess = new TeamAccess(obj.team = new Team(obj.player.team));
+            teamAccess.Fetch();
+            PlayerGameStatsAccess statsAccess = new PlayerGameStatsAccess(obj.stats = new PlayerGameStats(obj.player.playerid,obj.game.gameid));
+            statsAccess.Fetch();
         }
         public int Post()
         {

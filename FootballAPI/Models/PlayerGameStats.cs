@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,7 +8,10 @@ namespace FootballAPI.Models
 {
     public class PlayerGameStats
     {
-        public Game game { get; set; }
+        [JsonIgnore]
+        public string playerid { get; set; }
+        [JsonIgnore]
+        public string gameid { get; set; }
         public string passAtt { get; set; }
         public string passComp { get; set; }
         public string passYds { get; set; }
@@ -25,5 +29,15 @@ namespace FootballAPI.Models
         public string fgPct { get; set; }
         public string xpPct { get; set; }
 
+        public PlayerGameStats(string playerid,string gameid)
+        {
+            this.playerid = playerid;
+            this.gameid = gameid;
+
+        }
+        public PlayerGameStats()
+        {
+
+        }
     }
 }
