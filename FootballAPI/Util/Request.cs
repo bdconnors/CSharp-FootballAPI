@@ -9,8 +9,8 @@ namespace FootballAPI.Util
 {
     class Request
     {
-        private Season season;
-        private static string BaseReqString = "https://api.mysportsfeeds.com/v1.0/pull/nfl/";
+        public Season season;
+        public string BaseReqString = "https://api.mysportsfeeds.com/v1.0/pull/nfl/";
         
 
         /// <summary>

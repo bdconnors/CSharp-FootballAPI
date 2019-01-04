@@ -12,7 +12,7 @@ using System.Web;
 namespace FootballAPI.Util
 {
 
-    class Database
+    public class Database
     {
         //String used to connect to MySQL Database
         private string connString;

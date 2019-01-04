@@ -2,9 +2,10 @@
 {
     interface IDataAccessLayer<T>
     {
-        void Fetch(T obj);
-        int Post(T obj);
-        int Put(T obj);
-        int Delete(T obj);
+        T obj { get; set; }
+        void Fetch();
+        int Post();
+        int Put();
+        int Delete();
     }
 }
