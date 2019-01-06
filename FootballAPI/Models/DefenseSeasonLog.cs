@@ -5,8 +5,7 @@ using System.Web;
 
 namespace FootballAPI.Models
 {
-    public class DefenseGameLog
+    public class DefenseSeasonLog
     {
-        
     }
 }

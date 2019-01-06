@@ -29,5 +29,25 @@ namespace FootballAPI.Models
         {
 
         }
+        public void Set(string[] info)
+        {
+            playerid = info[0];
+            fname = info[1];
+            lname = info[2];
+            number = info[3];
+            position = info[4];
+            team = info[5];
+        }
+        public string[] Get()
+        {
+            string[] info = new string[6];
+            info[0] = playerid;
+            info[1] = fname;
+            info[2] = lname;
+            info[3] = number;
+            info[4] = position;
+            info[5] = team;
+            return info;
+        }
     }
 }

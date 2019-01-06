@@ -13,15 +13,6 @@ namespace FootballAPI.Models
         public string homeTeam { get; set; }
         public string awayTeam { get; set; }
 
-        public Game(string[] info)
-        {
-            gameid = info[0];
-            date = info[1];
-            time = info[2];
-            homeTeam = info[3];
-            awayTeam = info[4];
-        }
-
         public Game(string gameid)
         {
             this.gameid = gameid;
@@ -29,6 +20,24 @@ namespace FootballAPI.Models
         public Game()
         {
 
+        }
+        public void Set(string[] info)
+        {
+            gameid = info[0];
+            date = info[1];
+            time = info[2];
+            homeTeam = info[3];
+            awayTeam = info[4];
+        }
+        public string[] Get()
+        {
+            string[] info = new string[5];
+            info[0] = gameid;
+            info[1] = date;
+            info[2] = time;
+            info[3] = homeTeam;
+            info[4] = awayTeam;
+            return info;
         }
     }
 }

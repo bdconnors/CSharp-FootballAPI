@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace FootballAPI.Util
 {
-    class TeamRequest: Request 
+    public class TeamRequest: Request 
     {
         public TeamRequest(Season season) : base(season)
         { }
@@ -12,38 +12,21 @@ namespace FootballAPI.Util
         /// Gets all 32 NFL Team names and their abbreviations
         /// </summary>
         /// <returns>List of string[] Containing all 32 NFL Team names and their abbreviations</returns>
-        public List<string[]> GetTeams()
+        public List<Team> GetTeams()
         {
             string OverallTeams = "/overall_team_standings.json";
-            List<string[]> teams = new List<string[]>();
+            List<Team> teams = new List<Team>();
             JArray allTeams = (JArray)JObject.Parse(Submit(OverallTeams))["overallteamstandings"]["teamstandingsentry"];
-            string[] teamInfo = null;
-            foreach (JToken team in allTeams)
+            Team team;
+            foreach (JToken teamInfo in allTeams)
             {
-                teamInfo = new string[2];
-                teamInfo[0] = (string)team["team"]["Abbreviation"];
-                teamInfo[1] = (string)team["team"]["City"] + " " + (string)team["team"]["Name"];
-                teams.Add(teamInfo);
+                team = new Team();
+                team.abbr = (string)teamInfo["team"]["Abbreviation"];
+                team.city = (string)teamInfo["team"]["City"];
+                team.name = (string)teamInfo["team"]["Name"];
+                teams.Add(team);
             }
             return teams;
-        }
-        /// <summary>
-        /// Gets information for all games played by a specified NFL team
-        /// </summary>
-        /// <param name="team">Contains specific team abbreviation (i.e. NYG for New York Giants)</param>
-        /// <returns>List string[] Containing information for all games played by specified NFL team</returns>
-        public List<string[]> GetTeamGames(string team)
-        {
-            string TeamGames = "/team_gamelogs.json?team=" + team;
-            List<string[]> games = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(TeamGames))["rosterplayers"]["playerentry"];
-            string[] playerStats;
-            foreach (JToken player in allPlayers)
-            {
-                playerStats = new string[6];
-                games.Add(playerStats);
-            }
-            return games;
         }
     }
 }

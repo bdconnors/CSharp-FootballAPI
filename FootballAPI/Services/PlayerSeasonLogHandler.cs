@@ -7,26 +7,26 @@ using System.Web;
 
 namespace FootballAPI.Services
 {
-    public class PlayerSeasonLogAccess : IDataAccessLayer<PlayerSeasonLog>
+    public class PlayerSeasonLogHandler : IDataAccessLayer<PlayerSeasonLog>
     {
         public static Database db = new Database();
         public PlayerSeasonLog obj { get; set; }
 
-        public PlayerSeasonLogAccess(PlayerSeasonLog player)
+        public PlayerSeasonLogHandler(PlayerSeasonLog player)
         {
             obj = player;
         }
-        public PlayerSeasonLogAccess()
+        public PlayerSeasonLogHandler()
         {
 
         }
         public void Fetch()
         {
-            PlayerAccess playerAccess = new PlayerAccess(obj.player);
+            PlayerHandler playerAccess = new PlayerHandler(obj.player);
             playerAccess.Fetch(); 
-            TeamAccess teamAccess = new TeamAccess(obj.team = new Team(obj.player.team));
+            TeamHandler teamAccess = new TeamHandler(obj.team = new Team(obj.player.team));
             teamAccess.Fetch();
-            PlayerSeasonStatsAccess statsAccess = new PlayerSeasonStatsAccess(obj.stats = new PlayerSeasonStats(obj.player.playerid));
+            PlayerSeasonStatsHandler statsAccess = new PlayerSeasonStatsHandler(obj.stats = new PlayerSeasonStats(obj.player.playerid));
             statsAccess.Fetch();               
         }
         public int Post()

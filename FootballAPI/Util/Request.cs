@@ -7,12 +7,10 @@ using FootballAPI.Models;
 
 namespace FootballAPI.Util
 {
-    class Request
+    public class Request
     {
         public Season season;
         public string BaseReqString = "https://api.mysportsfeeds.com/v1.0/pull/nfl/";
-        
-
         /// <summary>
         /// Constructs a ApiRequest object using the specified season year for requests
         /// </summary>

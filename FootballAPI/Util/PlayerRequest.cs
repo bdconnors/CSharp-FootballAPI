@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace FootballAPI.Util
 {
-    class PlayerRequest:Request
+    public class PlayerRequest:Request
     {
         public PlayerRequest(Season season) : base(season)
         { }
@@ -13,23 +13,27 @@ namespace FootballAPI.Util
         /// </summary>
         /// <param name="position">Contains specific position abbreviation (i.e. WR for Wide Receiver)</param>
         /// <returns>List of string[] Containing the player information of all players of specified position</returns>
-        public List<string[]> GetPlayers(string position)
-        {
-            string PlayersByPosition = "/roster_players.json?rosterstatus=assigned-to-roster&position=" + position;
-            List<string[]> players = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(PlayersByPosition))["rosterplayers"]["playerentry"];
-            string[] playerInfo;
-            foreach (JToken player in allPlayers)
+        public List<Player> GetPlayers()
+        {      
+            List<Player> players = new List<Player>();
+            string[] positions = new string[] { "QB", "RB", "WR", "TE", "K" };
+            foreach (string position in positions)
             {
-                playerInfo = new string[6];
-                if (player["team"] == null) continue;
-                playerInfo[0] = (string) player["player"]["ID"];
-                playerInfo[1] = (string) player["player"]["FirstName"];
-                playerInfo[2] = (string) player["player"]["LastName"];
-                playerInfo[3] = (string) player["player"]["JerseyNumber"];
-                playerInfo[4] = (string) player["player"]["Position"];
-                playerInfo[5] = (string) player["team"]["Abbreviation"];
-                players.Add(playerInfo);
+                string getPlayers= "/roster_players.json?rosterstatus=assigned-to-roster&position=" + position;
+                JArray allPlayers = (JArray)JObject.Parse(Submit(getPlayers))["rosterplayers"]["playerentry"];
+                Player player;
+                foreach (JToken playerInfo in allPlayers)
+                {
+                    player = new Player();
+                    if (playerInfo["team"] == null) continue;
+                    player.playerid = (string)playerInfo["player"]["ID"];
+                    player.fname = (string)playerInfo["player"]["FirstName"];
+                    player.lname = (string)playerInfo["player"]["LastName"];
+                    player.number = (string)playerInfo["player"]["JerseyNumber"];
+                    player.position = (string)playerInfo["player"]["Position"];
+                    player.team = (string)playerInfo["team"]["Abbreviation"];
+                    players.Add(player);
+                }
             }
             return players;
         }
@@ -39,15 +43,35 @@ namespace FootballAPI.Util
         /// <param name="team">Contains specific team abbreviation (i.e. NYG for New York Giants)</param>
         /// <param name="position">Contains specific position abbreviation (i.e. WR for Wide Receiver)</param>
         /// <returns>List of string[] Containing game stats for players of specified position on specified NFL team</returns>
-        public List<string[]> GetGameStats(string team, string position)
+        public List<PlayerGameStats> GetGameStats(string team, string position)
         {
             string GameStats = "/player_gamelogs.json?team=" + team + "&position=" + position;
-            List<string[]> stats = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(GameStats))["rosterplayers"]["playerentry"];
-            string[] playerStats;
+            List<PlayerGameStats> stats = new List<PlayerGameStats>();
+            JArray allPlayers = (JArray)JObject.Parse(Submit(GameStats))["playergamelogs"]["gamelogs"];
+            PlayerGameStats playerStats;
             foreach (JToken player in allPlayers)
             {
-                playerStats = new string[6];
+                playerStats = new PlayerGameStats();
+                playerStats.playerid = (string)player["player"]["ID"];
+                playerStats.gameid = (string)player["game"]["id"];
+                playerStats.passAtt = (string)player["stats"]["PassAttempts"]["#text"];
+                playerStats.passComp = (string)player["stats"]["PassCompletions"]["#text"];
+                playerStats.passYds = (string)player["stats"]["PassYards"]["#text"];
+                playerStats.passTds = (string)player["stats"]["PassTD"]["#text"];
+                playerStats.intc = (string)player["stats"]["PassInt"]["#text"];
+                playerStats.rushAtt = (string)player["stats"]["RushAttempts"]["#text"];
+                playerStats.rushYds = (string)player["stats"]["RushYards"]["#text"];
+                playerStats.rushTds = (string)player["stats"]["RushTD"]["#text"];
+                playerStats.fum = (string)player["stats"]["RushFumbles"]["#text"];
+                playerStats.rec = (string)player["stats"]["Receptions"]["#text"];
+                playerStats.recYds = (string)player["stats"]["RecYards"]["#text"];
+                playerStats.recTds = (string)player["stats"]["RecTD"]["#text"];
+                playerStats.fgAtt = (string)player["stats"]["FgAtt"]["#text"];
+                playerStats.fgMade= (string)player["stats"]["stats"]["FgMade"]["#text"];
+                playerStats.xpAtt = (string)player["stats"]["XpAtt"]["#text"];
+                playerStats.xpMade = (string)player["stats"]["XpMade"]["#text"];
+                playerStats.fgPct = (string)player["stats"]["FgPct"]["#text"];
+                playerStats.xpPct= (string)player["stats"]["XpPct"]["#text"];
                 stats.Add(playerStats);
             }
             return stats;
@@ -57,15 +81,36 @@ namespace FootballAPI.Util
         /// </summary>
         /// <param name="position">Contains specific position abbreviation (i.e. WR for Wide Receiver)</param>
         /// <returns>List of string[] Containing season stats of all players of specified position</returns>
-        public List<string[]> GetSeasonStats(string position)
+        public List<PlayerSeasonStats> GetSeasonStats(string position)
         {
             string SeasonStats = "/cumulative_player_stats.json?position=" + position;
-            List<string[]> stats = new List<string[]>();
-            JArray allPlayers = (JArray)JObject.Parse(Submit(SeasonStats))["rosterplayers"]["playerentry"];
-            string[] playerStats;
+            List<PlayerSeasonStats> stats = new List<PlayerSeasonStats>();
+            JArray allPlayers = (JArray)JObject.Parse(Submit(SeasonStats))["cumulativeplayerstats"]["playerstatsentry"];
+            PlayerSeasonStats playerStats;
             foreach (JToken player in allPlayers)
             {
-                playerStats = new string[6];
+                playerStats = new PlayerSeasonStats();
+                playerStats.playerid = (string)player["player"]["ID"];
+                playerStats.gamesPlayed = (string)player["stats"]["GamesPlayed"]["#text"];
+                playerStats.passAtt = (string)player["stats"]["PassAttempts"]["#text"];
+                playerStats.passComp = (string)player["stats"]["PassCompletions"]["#text"];
+                playerStats.passYds = (string)player["stats"]["PassYards"]["#text"];
+                playerStats.passTds = (string)player["stats"]["PassTD"]["#text"];
+                playerStats.intc = (string)player["stats"]["PassInt"]["#text"];
+                playerStats.rushAtt = (string)player["stats"]["RushAttempts"]["#text"];
+                playerStats.rushYds = (string)player["stats"]["RushYards"]["#text"];
+                playerStats.rushTds = (string)player["stats"]["RushTD"]["#text"];
+                playerStats.fum = (string)player["stats"]["RushFumbles"]["#text"];
+                playerStats.rec = (string)player["stats"]["Receptions"]["#text"];
+                playerStats.recYds = (string)player["stats"]["RecYards"]["#text"];
+                playerStats.recTds = (string)player["stats"]["RecTD"]["#text"];
+                playerStats.fgAtt = (string)player["stats"]["FgAtt"]["#text"];
+                playerStats.fgMade = (string)player["stats"]["stats"]["FgMade"]["#text"];
+                playerStats.xpAtt = (string)player["stats"]["XpAtt"]["#text"];
+                playerStats.xpMade = (string)player["stats"]["XpMade"]["#text"];
+                playerStats.fgPct = (string)player["stats"]["FgPct"]["#text"];
+                playerStats.xpPct= (string)player["stats"]["XpPct"]["#text"];
+                stats.Add(playerStats);
                 stats.Add(playerStats);
             }
             return stats;

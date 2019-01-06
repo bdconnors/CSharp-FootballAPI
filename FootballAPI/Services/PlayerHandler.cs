@@ -7,16 +7,16 @@ using System.Web;
 
 namespace FootballAPI.Services
 {
-    public class PlayerAccess : IDataAccessLayer<Player>
+    public class PlayerHandler : IDataAccessLayer<Player>
     {
         public static Database db = new Database();
         public Player obj { get; set; }
 
-        public PlayerAccess(Player player)
+        public PlayerHandler(Player player)
         {
             obj = player;
         }
-        public PlayerAccess()
+        public PlayerHandler()
         {
 
         }
@@ -24,16 +24,19 @@ namespace FootballAPI.Services
         {
             string sql = "SELECT * FROM Player WHERE playerid = @playerid";
             Dictionary<string, string> values = new Dictionary<string, string>() { { "@playerid", obj.playerid } };
-            string[] queryResult = db.GetData(sql, values)[0];
-            obj.fname = queryResult[1];
-            obj.lname = queryResult[2];
-            obj.number = queryResult[3];
-            obj.position = queryResult[4];
-            obj.team = queryResult[5];
+            obj.Set(db.GetData(sql, values)[0]);
         }
         public int Post()
         {
-            return 0;
+            string sql = "INSERT INTO Player(Playerid,fname,lname,number,Position,team)VALUES(@Playerid,@fname,@lname,@number,@Position,@team)";
+            Dictionary<string, string> values = new Dictionary<string, string>();
+            values.Add("@Playerid", obj.playerid);
+            values.Add("@fname", obj.fname);
+            values.Add("@lname", obj.lname);
+            values.Add("@number", obj.number);
+            values.Add("@Position", obj.position);
+            values.Add("@team", obj.team);
+            return db.SetData(sql, values);
         }
         public int Put()
         {

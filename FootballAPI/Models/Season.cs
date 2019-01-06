@@ -36,11 +36,6 @@ namespace FootballAPI.Models
                 type = "-regular";
             }
         }
-        public Season(string year)
-        {
-            this.year = year;
-            type = "-regular";
-        }
         public Season()
         {
 

@@ -7,16 +7,16 @@ using System.Web;
 
 namespace FootballAPI.Services
 {
-    public class DefGameStatsAccess : IDataAccessLayer<DefenseGameStats>
+    public class DefGameStatsHandler : IDataAccessLayer<DefenseGameStats>
     {
         public static Database db = new Database();
         public DefenseGameStats obj { get; set; }
 
-        public DefGameStatsAccess(DefenseGameStats gameStats)
+        public DefGameStatsHandler(DefenseGameStats gameStats)
         {
             obj = gameStats;
         }
-        public DefGameStatsAccess()
+        public DefGameStatsHandler()
         {
 
         }

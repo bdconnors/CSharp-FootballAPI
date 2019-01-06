@@ -17,7 +17,7 @@ namespace FootballAPI.Controllers
         public PlayerSeasonLog Get(string playerid)
         {
             PlayerSeasonLog log = new PlayerSeasonLog(new Player(playerid));
-            PlayerSeasonLogAccess logAccess = new PlayerSeasonLogAccess(log);
+            PlayerSeasonLogHandler logAccess = new PlayerSeasonLogHandler(log);
             logAccess.Fetch();
             return log;
         }
@@ -26,7 +26,7 @@ namespace FootballAPI.Controllers
         public PlayerGameLog Get(string playerid,string gameid)
         {
             PlayerGameLog log = new PlayerGameLog(new Player(playerid),new Game(gameid));
-            PlayerGameLogAccess logAccess = new PlayerGameLogAccess(log);
+            PlayerGameLogHandler logAccess = new PlayerGameLogHandler(log);
             logAccess.Fetch();
             return log;
         }

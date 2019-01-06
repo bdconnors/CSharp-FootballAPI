@@ -7,22 +7,24 @@ using System.Web;
 
 namespace FootballAPI.Services
 {
-    public class DefSeasonStatsAccess : IDataAccessLayer<DefenseSeasonStats>
+    public class PlayerSeasonStatsHandler : IDataAccessLayer<PlayerSeasonStats>
     {
         public static Database db = new Database();
-        public DefenseSeasonStats obj { get; set; }
+        public PlayerSeasonStats obj { get; set; }
 
-        public DefSeasonStatsAccess(DefenseSeasonStats seasonStats)
+        public PlayerSeasonStatsHandler(PlayerSeasonStats seasonStats)
         {
             obj = seasonStats;
         }
-        public DefSeasonStatsAccess()
+        public PlayerSeasonStatsHandler()
         {
 
         }
         public void Fetch()
         {
-
+            string sql = "SELECT * FROM PlayerSeasonStats WHERE playerid = @playerid";
+            Dictionary<string, string> values = new Dictionary<string, string>() { { "@playerid", obj.playerid } };
+            obj.Set(db.GetData(sql, values)[0]);
         }
         public int Post()
         {
