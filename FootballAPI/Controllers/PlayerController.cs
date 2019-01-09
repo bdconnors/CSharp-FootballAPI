@@ -1,5 +1,5 @@
-﻿using FootballAPI.Models;
-using FootballAPI.Services;
+﻿using FootballAPI.DataLayer.Models;
+using FootballAPI.DataLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,24 +12,25 @@ namespace FootballAPI.Controllers
     [Route("api/Player")]
     public class PlayerController : ApiController
     {
-        //GET: api/Player/playerid
-        [Route("api/Player/{playerid}")]
-        public PlayerSeasonLog Get(string playerid)
+
+
+        [Route("api/Player/{id}")]
+        public Object Get(string id)
         {
-            PlayerSeasonLog log = new PlayerSeasonLog(new Player(playerid));
-            PlayerSeasonLogHandler logAccess = new PlayerSeasonLogHandler(log);
-            logAccess.Fetch();
-            return log;
+            Player player = new Player(new PlayerInfo(id));
+            PlayerService service = new PlayerService(player);
+            try
+            {                         
+                service.GetInfo();
+                service.GetSeasonLog();
+            }
+            catch(Exception e)
+            {             
+                return e;
+            }
+            return player;
         }
-        // GET: api/Player/5/5
-        [Route("api/Player/{playerid}/{gameid}")]
-        public PlayerGameLog Get(string playerid,string gameid)
-        {
-            PlayerGameLog log = new PlayerGameLog(new Player(playerid),new Game(gameid));
-            PlayerGameLogHandler logAccess = new PlayerGameLogHandler(log);
-            logAccess.Fetch();
-            return log;
-        }
+
 
     }
 }
