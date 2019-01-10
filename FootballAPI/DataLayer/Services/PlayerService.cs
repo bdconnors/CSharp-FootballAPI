@@ -10,8 +10,6 @@ namespace FootballAPI.DataLayer.Services
     public class PlayerService
     {
         public Player player { get; set; }
-        private PlayerGameStatsService gameStatsService;
-        private PlayerStatsService statsService;
         private static Database db;
 
         public PlayerService(Player player)
@@ -65,11 +63,37 @@ namespace FootballAPI.DataLayer.Services
         }
         public void GetSeasonLog()
         {    
-            statsService = new PlayerStatsService(player,new PlayerStats());
             try
             {
-                statsService.Fetch();
-                player.seasonLog = statsService.stats;
+                string sql = "SELECT gamesplayed,passatt,intc,passcomp,passyds,passtds,rushatt,rushyds,rushtds,fum,rec,"+
+                "recyds,rectds,fgatt,fgmade,xpatt,xpmade,fgpct,xppct "+
+                "FROM PlayerStats "+
+                "INNER JOIN PlayerSeasonStats ON PlayerStats.Statsid = PlayerSeasonStats.Statsid "+
+                "INNER JOIN Player ON PlayerSeasonStats.Playerid = Player.PlayerID "+
+                "WHERE Player.PlayerID = @Playerid;";
+                Dictionary<string, string> values = new Dictionary<string, string>() { { "@PlayerID", player.player.playerid } };
+                string[] result = db.GetData(sql, values)[0];
+                player.seasonLog = new PlayerStats();
+                player.seasonLog.gamesPlayed = result[0];
+                player.seasonLog.passAtt = result[1];
+                player.seasonLog.passComp = result[2];
+                player.seasonLog.passYds = result[3];
+                player.seasonLog.passTds = result[4];
+                player.seasonLog.intc = result[5];
+                player.seasonLog.rushAtt = result[6];
+                player.seasonLog.rushYds = result[7];
+                player.seasonLog.rushTds = result[8];
+                player.seasonLog.fum = result[9];
+                player.seasonLog.rec = result[10];
+                player.seasonLog.recYds = result[11];
+                player.seasonLog.recTds = result[12];
+                player.seasonLog.fgAtt = result[13];
+                player.seasonLog.fgMade = result[14];
+                player.seasonLog.xpAtt = result[15];
+                player.seasonLog.xpMade = result[16];
+                player.seasonLog.fgPct = result[17];
+                player.seasonLog.xpPct = result[18];
+
             }
             catch(Exception e)
             {
@@ -78,17 +102,63 @@ namespace FootballAPI.DataLayer.Services
         }
         public void GetGame(string gameid)
         {
-            gameStatsService = new PlayerGameStatsService(player, new PlayerGameStats(new Game(new GameInfo(gameid))));
-            try
-            {   
-                if(player.gameLogs == null)
-                {
-                    player.gameLogs = new List<PlayerGameStats>();
-                }
-                gameStatsService.Fetch();
-                player.gameLogs.Add(gameStatsService.gameStats);
+            if (player.gameLogs == null)
+            {
+                player.gameLogs = new List<PlayerGameStats>();
             }
-            catch(Exception e)
+            string sql = "SELECT Game.Gameid,Game.Date,Game.Time,HomeTeam," +
+            "(SELECT Team.City FROM Team WHERE Abbr = HomeTeam)AS HomeTeamCity," +
+            "(SELECT Team.Name FROM Team WHERE Abbr = HomeTeam)AS HomeTeamName,AwayTeam," +
+            "(SELECT Team.City FROM Team WHERE Abbr = AwayTeam)AS AwayTeamCity," +
+            "(SELECT Team.Name FROM Team WHERE Abbr = AwayTeam)AS AwayTeamName," +
+            "passatt, passcomp, passyds, passtds,intc,rushatt, rushyds, rushtds, fum, rec," +
+            "recyds, rectds, fgatt, fgmade, xpatt, xpmade, fgpct, xppct " +
+            "FROM PlayerStats " +
+            "INNER JOIN PlayerGameStats ON PlayerStats.Statsid = PlayerGameStats.Statsid " +
+            "INNER JOIN PlayerGame ON PlayerGameStats.Gameid = PlayerGame.Gameid " +
+            "INNER JOIN Game ON PlayerGame.Gameid = Game.Gameid " +
+            "INNER JOIN Player ON PlayerGame.Playerid = Player.PlayerID " +
+            "INNER JOIN Team ON Player.Team = Team.Abbr " +
+            "WHERE Player.PlayerID = @Playerid AND Game.Gameid = @Gameid " +
+            "GROUP BY Date;";
+            Dictionary<string, string> values = new Dictionary<string, string>();
+            values.Add("@Playerid",player.player.playerid);
+            values.Add("@Gameid", gameid);
+            try
+            {
+                string[] result = db.GetData(sql, values)[0];
+                PlayerGameStats gameStats;           
+                gameStats = new PlayerGameStats();
+                gameStats.game.game.gameid = result[0];
+                gameStats.game.game.date = result[1];
+                gameStats.game.game.time = result[2];
+                gameStats.game.homeTeam.abbr = result[3];
+                gameStats.game.homeTeam.city = result[4];
+                gameStats.game.homeTeam.name = result[5];
+                gameStats.game.awayTeam.abbr = result[6];
+                gameStats.game.awayTeam.city = result[7];
+                gameStats.game.awayTeam.name = result[8];
+                gameStats.stats.passAtt = result[9];
+                gameStats.stats.passComp = result[10];
+                gameStats.stats.passYds = result[11];
+                gameStats.stats.passTds = result[12];
+                gameStats.stats.intc = result[13];
+                gameStats.stats.rushAtt = result[14];
+                gameStats.stats.rushYds = result[15];
+                gameStats.stats.rushTds = result[16];
+                gameStats.stats.fum = result[17];
+                gameStats.stats.rec = result[18];
+                gameStats.stats.recYds = result[19];
+                gameStats.stats.recTds = result[20];
+                gameStats.stats.fgAtt = result[21];
+                gameStats.stats.fgMade = result[22];
+                gameStats.stats.xpAtt = result[23];
+                gameStats.stats.xpMade = result[24];
+                gameStats.stats.fgPct = result[25];
+                gameStats.stats.xpPct = result[26];
+                player.gameLogs.Add(gameStats);          
+            }
+            catch (Exception e)
             {
                 throw new Exception(e.Message, e);
             }
@@ -99,54 +169,107 @@ namespace FootballAPI.DataLayer.Services
             {
                 player.gameLogs = new List<PlayerGameStats>();
             }
-            string sql = "SELECT Gameid FROM PlayerGameStats WHERE Playerid = @PlayerID";
+            string sql = "SELECT Game.Gameid,Game.Date,Game.Time,HomeTeam," +
+            "(SELECT Team.City FROM Team WHERE Abbr = HomeTeam)AS HomeTeamCity," +
+            "(SELECT Team.Name FROM Team WHERE Abbr = HomeTeam)AS HomeTeamName,AwayTeam," +
+            "(SELECT Team.City FROM Team WHERE Abbr = AwayTeam)AS AwayTeamCity," +
+            "(SELECT Team.Name FROM Team WHERE Abbr = AwayTeam)AS AwayTeamName," +
+            "passatt, passcomp, passyds, passtds,intc,rushatt, rushyds, rushtds, fum, rec," +
+            "recyds, rectds, fgatt, fgmade, xpatt, xpmade, fgpct, xppct " +
+            "FROM PlayerStats " +
+            "INNER JOIN PlayerGameStats ON PlayerStats.Statsid = PlayerGameStats.Statsid " +
+            "INNER JOIN PlayerGame ON PlayerGameStats.Gameid = PlayerGame.Gameid " +
+            "INNER JOIN Game ON PlayerGame.Gameid = Game.Gameid " +
+            "INNER JOIN Player ON PlayerGame.Playerid = Player.PlayerID " +
+            "INNER JOIN Team ON Player.Team = Team.Abbr " +
+            "WHERE Player.PlayerID = @Playerid " +
+            "GROUP BY Date;";
             Dictionary<string, string> values = new Dictionary<string, string>() { { "@PlayerID", player.player.playerid } };
             try
             {               
                 List<string[]> queryResults = db.GetData(sql, values);
+                PlayerGameStats gameStats;
                 foreach (string[] result in queryResults)
                 {
-                    GetGame(result[0]);
+                    gameStats = new PlayerGameStats();
+                    gameStats.game.game.gameid = result[0];
+                    gameStats.game.game.date = result[1];
+                    gameStats.game.game.time = result[2];
+                    gameStats.game.homeTeam.abbr = result[3];
+                    gameStats.game.homeTeam.city = result[4];
+                    gameStats.game.homeTeam.name = result[5];
+                    gameStats.game.awayTeam.abbr = result[6];
+                    gameStats.game.awayTeam.city = result[7];
+                    gameStats.game.awayTeam.name = result[8];
+                    gameStats.stats.passAtt = result[9];
+                    gameStats.stats.passComp = result[10];
+                    gameStats.stats.passYds = result[11];
+                    gameStats.stats.passTds = result[12];
+                    gameStats.stats.intc = result[13];
+                    gameStats.stats.rushAtt = result[14];
+                    gameStats.stats.rushYds = result[15];
+                    gameStats.stats.rushTds = result[16];
+                    gameStats.stats.fum = result[17];
+                    gameStats.stats.rec = result[18];
+                    gameStats.stats.recYds = result[19];
+                    gameStats.stats.recTds = result[20];
+                    gameStats.stats.fgAtt= result[21];
+                    gameStats.stats.fgMade= result[22];
+                    gameStats.stats.xpAtt = result[23];
+                    gameStats.stats.xpMade = result[24];
+                    gameStats.stats.fgPct = result[25];
+                    gameStats.stats.xpPct = result[26];
+                    player.gameLogs.Add(gameStats);
+
                 }
             }
             catch(Exception e)
             {
                 throw new Exception(e.Message, e);
             }
-        }
-        public int PostSeasonLog()
-        {
-            int effected = 0;
-            statsService = new PlayerStatsService(player);
-            try
-            {
-                effected += statsService.Post();
-            }
-            catch(Exception e)
-            {
-                effected = -1;
-                throw new Exception(e.Message, e);
-            }
-            return effected;
         }
         public int PostGameLogs()
         {
             int effected = 0;
-            List<PlayerGameStats> gameLogs = player.gameLogs;
-            gameStatsService = new PlayerGameStatsService(player);
-            try
+            string sql1 = "INSERT INTO PlayerGame(Playerid,Gameid)VALUES(@Playerid,@Gameid)";
+            string sql2 = "INSERT INTO PlayerStats(passatt, passcomp, passyds, passtds,intc,rushatt, rushyds,"+
+                "rushtds, fum, rec,recyds, rectds, fgatt, fgmade, xpatt, xpmade, fgpct, xppct)VALUES(@passatt, @passcomp, " +
+                "@passyds, @passtds,@intc,@rushatt, @rushyds, @rushtds, @fum, @rec,@recyds, @rectds, @fgatt, @fgmade, @xpatt, @xpmade, @fgpct, @xppct)";
+            string sql3 = "INSERT INTO PlayerGameStats(Playerid,Gameid,Statsid)VALUES(@Playerid,@Gameid,last_insert_id());";
+            Dictionary<string, string> values;
+            db.StartTransaction();
+            foreach (PlayerGameStats gameStats in player.gameLogs)
             {
-                foreach (PlayerGameStats game in gameLogs)
-                {
-                    gameStatsService.gameStats = game;
-                    effected += gameStatsService.Post();
-                }
+                values = new Dictionary<string, string>();
+                values.Add("@Playerid", player.player.playerid);
+                values.Add("@Gameid",gameStats.game.game.gameid);
+                effected += db.SetData(sql1, values);
+                values = new Dictionary<string, string>();
+                values.Add("@passatt",gameStats.stats.passAtt);
+                values.Add("@passcomp",gameStats.stats.passComp);
+                values.Add("@passyds",gameStats.stats.passYds);
+                values.Add("@passtds",gameStats.stats.passTds);
+                values.Add("@intc",gameStats.stats.intc);
+                values.Add("@rushatt",gameStats.stats.rushAtt);
+                values.Add("@rushyds", gameStats.stats.rushYds);
+                values.Add("@rushtds", gameStats.stats.rushTds);
+                values.Add("@fum", gameStats.stats.fum);
+                values.Add("@rec", gameStats.stats.rec);
+                values.Add("@recyds", gameStats.stats.recYds);
+                values.Add("@rectds", gameStats.stats.recTds);
+                values.Add("@fgatt", gameStats.stats.fgAtt);
+                values.Add("@fgmade", gameStats.stats.fgMade);
+                values.Add("@xpatt", gameStats.stats.xpAtt);
+                values.Add("@xpmade", gameStats.stats.xpMade);
+                values.Add("@fgpct", gameStats.stats.fgPct);
+                values.Add("@xppct", gameStats.stats.fgMade);
+                effected += db.SetData(sql2, values);
+                values = new Dictionary<string, string>();
+                values.Add("@Playerid", player.player.playerid);
+                values.Add("@Gameid", gameStats.game.game.gameid);
+                effected += db.SetData(sql3, values);
             }
-            catch(Exception e)
-            {
-                effected = -1;
-                throw new Exception(e.Message, e);
-            }
+            db.EndTransaction();
             return effected;
         }
         public bool Exists()

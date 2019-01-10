@@ -23,7 +23,9 @@ namespace FootballAPI.DataLayer.Models
         }
         public Game()
         {
-
+            game = new GameInfo();
+            homeTeam = new Team();
+            awayTeam = new Team();
         }
     }
 }

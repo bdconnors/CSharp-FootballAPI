@@ -13,5 +13,9 @@ namespace FootballAPI.DataLayer
         {
             message = effected + "Rows Effeceted In The Database";
         }
+        public Effected(string effected)
+        {
+            message = effected;
+        }
     }
 }
