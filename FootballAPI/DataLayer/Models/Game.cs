@@ -7,23 +7,20 @@ namespace FootballAPI.DataLayer.Models
 {
     public class Game
     {
-        public GameInfo game { get; set; }
+        public string gameid { get; set; }
+        public string date { get; set; }
+        public string time { get; set; }
         public Team homeTeam { get; set; }
         public Team awayTeam { get; set; }
 
-        public Game(GameInfo game,Team homeTeam,Team awayTeam)
+        public Game(string gameid)
         {
-            this.game = game;
-            this.homeTeam = homeTeam;
-            this.awayTeam = awayTeam;
-        }
-        public Game(GameInfo game)
-        {
-            this.game = game;
+            this.gameid = gameid;
+            homeTeam = new Team();
+            awayTeam = new Team();
         }
         public Game()
         {
-            game = new GameInfo();
             homeTeam = new Team();
             awayTeam = new Team();
         }

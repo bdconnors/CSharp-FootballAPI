@@ -16,29 +16,13 @@ namespace FootballAPI.Controllers
     {
 
 
-        [Route("api/Player/{playerid}")]
-        public Object GetPlayer(string playerid)
-        {
-            Player player = new Player(new PlayerInfo(playerid));
-            PlayerService service = new PlayerService(player);
-            try
-            {
-                service.GetInfo();
-            }
-            catch (Exception e)
-            {
-                return e;
-            }
-            return player;
-        }
         [Route("api/Player/SeasonStats/{playerid}")]
         public Object GetSeasonStats(string playerid)
         {
-            Player player = new Player(new PlayerInfo(playerid));
+            Player player = new Player(playerid);
             PlayerService service = new PlayerService(player);
             try
             {                         
-                service.GetInfo();
                 service.GetSeasonLog();
             }
             catch(Exception e)
@@ -50,11 +34,10 @@ namespace FootballAPI.Controllers
         [Route("api/Player/GameStats/{playerid}/{gameid}")]
         public Object GetGame(string playerid,string gameid)
         {
-            Player player = new Player(new PlayerInfo(playerid));
+            Player player = new Player(playerid);
             PlayerService service = new PlayerService(player);
             try
             {
-                service.GetInfo();
                 service.GetGame(gameid);
             }
             catch (Exception e)
@@ -66,27 +49,11 @@ namespace FootballAPI.Controllers
         [Route("api/Player/GameLogs/{playerid}")]
         public Object GetGameLogs(string playerid)
         {
-            Player player = new Player(new PlayerInfo(playerid));
+            Player player = new Player(playerid);
             PlayerService service = new PlayerService(player);
             try
             {
-                service.GetInfo();
                 service.GetGameLogs();
-            }
-            catch (Exception e)
-            {
-                return e;
-            }
-            return player;
-        }
-        [Route("api/Player/AllLogs/{playerid}")]
-        public Object GetPlayerAll(string playerid)
-        {
-            Player player = new Player(new PlayerInfo(playerid));
-            PlayerService service = new PlayerService(player);
-            try
-            {
-                service.Fetch();
             }
             catch (Exception e)
             {

@@ -30,12 +30,11 @@ namespace FootballAPI.DataLayer.Util
                 foreach (JToken gameInfo in allGames)
                 {
                     game = new Game();
-                    game.game = new GameInfo();
                     game.homeTeam = new Team();
                     game.awayTeam = new Team();
-                    game.game.gameid = (string)gameInfo["game"]["id"];
-                    game.game.date = (string)gameInfo["game"]["date"];
-                    game.game.time = (string)gameInfo["game"]["time"];
+                    game.gameid = (string)gameInfo["game"]["id"];
+                    game.date = (string)gameInfo["game"]["date"];
+                    game.time = (string)gameInfo["game"]["time"];
                     game.awayTeam.abbr = (string)gameInfo["game"]["awayTeam"]["Abbreviation"];
                     game.homeTeam.abbr = (string)gameInfo["game"]["homeTeam"]["Abbreviation"];
                     games.Add(game);

@@ -125,7 +125,7 @@ namespace FootballAPI.DataLayer.Util
         /// <param name="sql">contains SQL query statement</param>
         /// <param name="values">contains bind values for SQL query statement</param>
         /// <returns>List<String[]> containing rows of data from the database</returns>
-        public List<string[]> GetData(string sql,Dictionary<string,string> values)
+        public List<string[]> SelectStmt(string sql,Dictionary<string,string> values)
         {
             List<string[]> data = new List<string[]>();
             try
@@ -156,7 +156,7 @@ namespace FootballAPI.DataLayer.Util
         /// <param name="sql">contains non-query SQL Statement</param>
         /// <param name="values">contains bind values for non-query SQL statement</param>
         /// <returns></returns>
-        public int SetData(string sql,Dictionary<string,string> values)
+        public int UpdateStmt(string sql,Dictionary<string,string> values)
         {
             int effected = 0;
             try
@@ -220,6 +220,59 @@ namespace FootballAPI.DataLayer.Util
                 throw new Exception(e.Message, e);
             }
             return effected;
+        }
+        public List<string[]>SelectProc(string procName,Dictionary<string,string> inParams)
+        {
+            List<string[]> result = new List<string[]>();
+            try
+            {
+                Connect();
+                MySqlCommand cmd = new MySqlCommand(procName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                PrepareCmd(cmd, inParams);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    string[] row = new string[rdr.FieldCount];
+                    for (int i = 0; i < rdr.FieldCount; i++)
+                    {
+                        row[i] = rdr.GetValue(i).ToString();
+                    }
+                    result.Add(row);
+                }
+                Close();
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+            return result;     
+        }
+        public int UpdateProc(string procName,Dictionary<string,string> inParams)
+        {        
+            int effected = 0;
+            try
+            {
+                Connect();
+                MySqlCommand cmd = new MySqlCommand(procName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                PrepareCmd(cmd, inParams);
+                effected = cmd.ExecuteNonQuery();
+                Close();
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+            return effected;
+        }
+        public MySqlCommand PrepareCmd(MySqlCommand cmd,Dictionary<string, string> cmdParams)
+        {
+            foreach (KeyValuePair<string, string> param in cmdParams)
+            {
+                cmd.Parameters.AddWithValue(param.Key, param.Value);
+            }
+            return cmd;
         }
         /// <summary>
         /// Reads Connection String from .txt file and returns it as a string

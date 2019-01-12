@@ -21,7 +21,8 @@ namespace FootballAPI.DataLayer.Models
         }
         public DefenseGameStats()
         {
-
+            game = new Game();
+            stats = new DefenseStats();
         }
     }
 }

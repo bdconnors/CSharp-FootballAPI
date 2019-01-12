@@ -172,10 +172,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\DefenseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoadController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DataLayer\Effected.cs" />
+    <Compile Include="DataLayer\Services\DefenseService.cs" />
+    <Compile Include="DataLayer\Services\GameService.cs" />
+    <Compile Include="DataLayer\Services\TeamService.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -183,10 +187,8 @@
     <Compile Include="DataLayer\Models\DefenseGameStats.cs" />
     <Compile Include="DataLayer\Models\DefenseStats.cs" />
     <Compile Include="DataLayer\Models\Game.cs" />
-    <Compile Include="DataLayer\Models\GameInfo.cs" />
     <Compile Include="DataLayer\Models\Player.cs" />
     <Compile Include="DataLayer\Models\PlayerGameStats.cs" />
-    <Compile Include="DataLayer\Models\PlayerInfo.cs" />
     <Compile Include="DataLayer\Models\PlayerStats.cs" />
     <Compile Include="DataLayer\Models\Team.cs" />
     <Compile Include="DataLayer\Models\Season.cs" />

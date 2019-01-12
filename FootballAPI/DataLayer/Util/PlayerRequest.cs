@@ -28,11 +28,11 @@ namespace FootballAPI.DataLayer.Util
                 foreach (JToken playerInfo in allPlayers)
                 {
                     if (playerInfo["team"] == null) continue;
-                    player = new Player(new PlayerInfo((string)playerInfo["player"]["ID"]),new Team());
-                    player.player.fname = (string)playerInfo["player"]["FirstName"];
-                    player.player.lname = (string)playerInfo["player"]["LastName"];
-                    player.player.number = (string)playerInfo["player"]["JerseyNumber"];
-                    player.player.position = (string)playerInfo["player"]["Position"];
+                    player = new Player((string)playerInfo["player"]["ID"]);
+                    player.fname = (string)playerInfo["player"]["FirstName"];
+                    player.lname = (string)playerInfo["player"]["LastName"];
+                    player.number = (string)playerInfo["player"]["JerseyNumber"];
+                    player.position = (string)playerInfo["player"]["Position"];
                     player.team.abbr = (string)playerInfo["team"]["Abbreviation"];
                     players.Add(player);
                 }
@@ -54,7 +54,7 @@ namespace FootballAPI.DataLayer.Util
             JArray allPlayers = (JArray)JObject.Parse(Submit(gameStats))["playergamelogs"]["gamelogs"];
             foreach (JArray player in allPlayers)
             {               
-                if (inDB.Where(p => p.player.playerid == (string)player["player"]["ID"]).Any())
+                if (inDB.Where(p => p.playerid == (string)player["player"]["ID"]).Any())
                 {                    
                     players.Add(ConstructGameLogs(player));
                 }            
@@ -87,9 +87,10 @@ namespace FootballAPI.DataLayer.Util
                 foreach (JToken player in allPlayers)
                 {   
                                     
-                    currentPlayer = new Player(new PlayerInfo((string)player["player"]["ID"]),new Team(),new PlayerStats());
+                    currentPlayer = new Player((string)player["player"]["ID"]);
+                    currentPlayer.seasonLog = new PlayerStats();
                     currentStats = currentPlayer.seasonLog;
-                    if (inDB.Where(p => p.player.playerid == currentPlayer.player.playerid).Any())
+                    if (inDB.Where(p => p.playerid == currentPlayer.playerid).Any())
                     {
                         if (position.Equals("K"))
                         {
@@ -126,11 +127,13 @@ namespace FootballAPI.DataLayer.Util
         }
         public Player ConstructGameLogs(JArray games)
         {
-            Player currentPlayer = new Player(new PlayerInfo((string)games[0]["player"]["ID"]), new Team((string)games[0]["team"]["Abbreviation"]), new List<PlayerGameStats>());
+            Player currentPlayer = new Player((string)games[0]["player"]["ID"]);
+            currentPlayer.team.abbr = (string)games[0]["team"]["Abbreviation"];
+            currentPlayer.gameLogs = new List<PlayerGameStats>();
             foreach (JToken game in games)
             {
                 PlayerStats currentStats = new PlayerStats();
-                Game currentGame = currentGame = new Game(new GameInfo((string)game["game"]["id"]));
+                Game currentGame = currentGame = new Game((string)game["game"]["id"]);
               
                 if (game["player"]["Position"].Equals("K"))
                 {

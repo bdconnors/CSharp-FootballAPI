@@ -36,7 +36,7 @@ namespace FootballAPI.DataLayer.Models
         }
         public Defense()
         {
-          
+            team = new Team();
         }
     }
 }

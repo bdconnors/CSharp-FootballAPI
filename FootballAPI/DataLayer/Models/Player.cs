@@ -8,44 +8,26 @@ namespace FootballAPI.DataLayer.Models
 {
     public class Player
     {
-        public PlayerInfo player { get; set; }
+        public string playerid { get; set; }
+        public string fname { get; set; }
+        public string lname { get; set; }
+        public string number { get; set; }
+        public string position { get; set; }
         public Team team { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public PlayerStats seasonLog {get; set;}
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<PlayerGameStats> gameLogs {get; set;}
 
-        public Player(PlayerInfo player, Team team, PlayerStats seasonLog,List<PlayerGameStats> gameLogs)
+
+        public Player(string playerid)
         {
-            this.player = player;
-            this.team = team;
-            this.seasonLog = seasonLog;
-            this.gameLogs = gameLogs;
-        }
-        public Player(PlayerInfo player, Team team,List<PlayerGameStats> gameLogs)
-        {
-            this.player = player;
-            this.team = team;
-            this.gameLogs = gameLogs;
-        }
-        public Player(PlayerInfo player,Team team,PlayerStats seasonLog)
-        {
-            this.player = player;
-            this.team = team;
-            this.seasonLog = seasonLog;
-        }
-        public Player(PlayerInfo player,Team team)
-        {
-            this.player = player;
-            this.team = team;
-        }
-        public Player(PlayerInfo player)
-        {
-            this.player = player;
+            this.playerid = playerid;
+            team = new Team();
         }
         public Player()
         {
-
+            team = new Team();
         }
     }
 }
