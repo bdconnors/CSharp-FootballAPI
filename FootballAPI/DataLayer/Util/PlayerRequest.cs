@@ -29,10 +29,10 @@ namespace FootballAPI.DataLayer.Util
                 {
                     if (playerInfo["team"] == null) continue;
                     player = new Player((string)playerInfo["player"]["ID"]);
-                    player.fname = (string)playerInfo["player"]["FirstName"];
-                    player.lname = (string)playerInfo["player"]["LastName"];
-                    player.number = (string)playerInfo["player"]["JerseyNumber"];
-                    player.position = (string)playerInfo["player"]["Position"];
+                    player.player.fname = (string)playerInfo["player"]["FirstName"];
+                    player.player. lname = (string)playerInfo["player"]["LastName"];
+                    player.player.number = (string)playerInfo["player"]["JerseyNumber"];
+                    player.player.position = (string)playerInfo["player"]["Position"];
                     player.team.abbr = (string)playerInfo["team"]["Abbreviation"];
                     players.Add(player);
                 }
@@ -54,7 +54,7 @@ namespace FootballAPI.DataLayer.Util
             JArray allPlayers = (JArray)JObject.Parse(Submit(gameStats))["playergamelogs"]["gamelogs"];
             foreach (JArray player in allPlayers)
             {               
-                if (inDB.Where(p => p.playerid == (string)player["player"]["ID"]).Any())
+                if (inDB.Where(p => p.player.playerid == (string)player["player"]["ID"]).Any())
                 {                    
                     players.Add(ConstructGameLogs(player));
                 }            
@@ -90,7 +90,7 @@ namespace FootballAPI.DataLayer.Util
                     currentPlayer = new Player((string)player["player"]["ID"]);
                     currentPlayer.seasonLog = new PlayerStats();
                     currentStats = currentPlayer.seasonLog;
-                    if (inDB.Where(p => p.playerid == currentPlayer.playerid).Any())
+                    if (inDB.Where(p => p.player.playerid == currentPlayer.player.playerid).Any())
                     {
                         if (position.Equals("K"))
                         {

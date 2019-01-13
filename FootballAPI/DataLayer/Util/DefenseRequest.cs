@@ -28,7 +28,7 @@ namespace FootballAPI.DataLayer.Util
                 Game currentGame;
                 DefenseStats currentStats;
                 DefenseGameStats currentGameStats;
-                Defense currentDefense = new Defense(currentTeam, new List<DefenseGameStats>());
+                Defense currentDefense = new Defense(currentTeam.abbr, new List<DefenseGameStats>());
                 foreach (JToken game in allGames)
                 {              
                     currentGame = new Game((string)game["game"]["id"]);
@@ -80,7 +80,7 @@ namespace FootballAPI.DataLayer.Util
                 currentStats.fgBlk = (string)team["stats"]["FgBlk"]["#text"];
                 currentStats.xpBlk = (string)team["stats"]["XpBlk"]["#text"];
                 currentTeam = new Team((string)team["team"]["Abbreviation"]);
-                currentDefense = new Defense(currentTeam, currentStats);
+                currentDefense = new Defense(currentTeam.abbr, currentStats);
                 defenses.Add(currentDefense);
             }
             Thread.Sleep(10000);

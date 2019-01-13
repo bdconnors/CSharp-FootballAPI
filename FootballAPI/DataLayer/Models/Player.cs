@@ -8,11 +8,7 @@ namespace FootballAPI.DataLayer.Models
 {
     public class Player
     {
-        public string playerid { get; set; }
-        public string fname { get; set; }
-        public string lname { get; set; }
-        public string number { get; set; }
-        public string position { get; set; }
+        public PlayerInfo player{get;set;}
         public Team team { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public PlayerStats seasonLog {get; set;}
@@ -22,11 +18,12 @@ namespace FootballAPI.DataLayer.Models
 
         public Player(string playerid)
         {
-            this.playerid = playerid;
+            player = new PlayerInfo(playerid);
             team = new Team();
         }
         public Player()
         {
+            player = new PlayerInfo();
             team = new Team();
         }
     }

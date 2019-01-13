@@ -19,8 +19,7 @@ namespace FootballAPI.DataLayer.Services
         public GameService()
         { }
         
-
-        public void GetGame()
+        public void Get()
         {
             try
             {
@@ -41,7 +40,7 @@ namespace FootballAPI.DataLayer.Services
                 throw new Exception(e.Message, e);
             }
         }
-        public int InsertGame()
+        public int Insert()
         {
             int effected = 0;
             try

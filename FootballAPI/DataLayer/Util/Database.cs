@@ -229,7 +229,10 @@ namespace FootballAPI.DataLayer.Util
                 Connect();
                 MySqlCommand cmd = new MySqlCommand(procName, conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                PrepareCmd(cmd, inParams);
+                if (inParams != null)
+                {
+                    PrepareParams(cmd, inParams);
+                }
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -256,7 +259,10 @@ namespace FootballAPI.DataLayer.Util
                 Connect();
                 MySqlCommand cmd = new MySqlCommand(procName, conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                PrepareCmd(cmd, inParams);
+                if (inParams != null)
+                {
+                    PrepareParams(cmd, inParams);
+                }
                 effected = cmd.ExecuteNonQuery();
                 Close();
             }
@@ -266,7 +272,7 @@ namespace FootballAPI.DataLayer.Util
             }
             return effected;
         }
-        public MySqlCommand PrepareCmd(MySqlCommand cmd,Dictionary<string, string> cmdParams)
+        public MySqlCommand PrepareParams(MySqlCommand cmd,Dictionary<string, string> cmdParams)
         {
             foreach (KeyValuePair<string, string> param in cmdParams)
             {

@@ -8,35 +8,35 @@ namespace FootballAPI.DataLayer.Models
 {
     public class Defense
     {
-        public Team team { get; set; }
+        public Team defense { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DefenseStats seasonLog { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<DefenseGameStats> gameLogs { get; set; }
 
-        public Defense(Team team, DefenseStats seasonLog,List<DefenseGameStats> gameLogs)
+        public Defense(string team, DefenseStats seasonLog,List<DefenseGameStats> gameLogs)
         {
-            this.team = team;
+            defense = new Team(team);
             this.seasonLog = seasonLog;
             this.gameLogs = gameLogs;
         }
-        public Defense(Team team, List<DefenseGameStats> gameLogs)
+        public Defense(string team, List<DefenseGameStats> gameLogs)
         {
-            this.team = team;
+            defense = new Team(team);
             this.gameLogs = gameLogs;
         }
-        public Defense(Team team,DefenseStats seasonLog)
+        public Defense(string team,DefenseStats seasonLog)
         {
-            this.team = team;
+            defense = new Team(team);
             this.seasonLog = seasonLog;
         }
-        public Defense(Team team)
+        public Defense(string team)
         {
-            this.team = team;
+            defense = new Team(team);
         }
         public Defense()
         {
-            team = new Team();
+            defense = new Team();
         }
     }
 }
