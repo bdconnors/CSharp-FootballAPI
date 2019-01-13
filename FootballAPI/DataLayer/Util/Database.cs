@@ -20,9 +20,14 @@ namespace FootballAPI.DataLayer.Util
         private static MySqlConnection conn = null;
         //Transaction object
         private static MySqlTransaction trans = null;
+        public Database(string fileName)
+        {
+            this.connString = LoadConnString(fileName);
+
+        }
         public Database()
         {
-            this.connString = LoadConnString();
+            this.connString = LoadConnString("connString.txt");
 
         }
         /// <summary>
@@ -284,10 +289,10 @@ namespace FootballAPI.DataLayer.Util
         /// Reads Connection String from .txt file and returns it as a string
         /// </summary>
         /// <param name="file">The Location path of the .txt file</param>
-        public string LoadConnString()
+        public string LoadConnString(string fileName)
         {
             string cString = null;
-            string path = HttpRuntime.AppDomainAppPath + @"DataLayer\Resources\connString.txt";
+            string path = HttpRuntime.AppDomainAppPath + @"DataLayer\Resources\"+fileName;
             try
             {             
                 var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);

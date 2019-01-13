@@ -202,7 +202,6 @@
     <Compile Include="DataLayer\Models\Season.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataLayer\Services\PlayerInfoService.cs" />
-    <Compile Include="Logic\ExceptionUtility.cs" />
     <Compile Include="DataLayer\Util\Database.cs" />
     <Compile Include="DataLayer\Util\DefenseRequest.cs" />
     <Compile Include="DataLayer\Util\GameRequest.cs" />
