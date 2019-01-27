@@ -36,7 +36,11 @@ namespace FootballAPI.DataLayer.Util
                     game.date = (string)gameInfo["game"]["date"];
                     game.time = (string)gameInfo["game"]["time"];
                     game.awayTeam.abbr = (string)gameInfo["game"]["awayTeam"]["Abbreviation"];
+                    game.awayTeam.city = (string)gameInfo["game"]["awayTeam"]["City"];
+                    game.awayTeam.name = (string)gameInfo["game"]["awayTeam"]["Name"];
                     game.homeTeam.abbr = (string)gameInfo["game"]["homeTeam"]["Abbreviation"];
+                    game.homeTeam.city = (string)gameInfo["game"]["homeTeam"]["City"];
+                    game.homeTeam.name = (string)gameInfo["game"]["homeTeam"]["Name"];
                     games.Add(game);
                 }
             }
