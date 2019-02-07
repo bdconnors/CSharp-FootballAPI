@@ -17,9 +17,9 @@ namespace FootballAPI.DataLayer.Util
         //String used to connect to MySQL Database
         private string connString;
         //Connection object
-        private static MySqlConnection conn = null;
+        private MySqlConnection conn = null;
         //Transaction object
-        private static MySqlTransaction trans = null;
+        private MySqlTransaction trans = null;
         public Database(string fileName)
         {
             this.connString = LoadConnString(fileName);
